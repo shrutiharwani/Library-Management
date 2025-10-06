@@ -1,5 +1,3 @@
-# library/views.py
-
 from rest_framework import viewsets, status, generics
 from rest_framework.response import Response
 from django.db.models import Count
@@ -21,19 +19,15 @@ class BookViewSet(viewsets.ModelViewSet):
             return [IsAuthenticated(), IsLibrarian()]
         return [AllowAny()]
 
-    # This new method contains the core logic for the report.
     def get_queryset(self):
-        # Start by calculating the number of times each book was issued.
         qs = Book.objects.all().annotate(issued_count=Count('issued_records'))
         
-        # Get the sorting and filtering parameters from the URL.
         sort = self.request.query_params.get('sort')
         author = self.request.query_params.get('author')
 
         if author:
             qs = qs.filter(author__icontains=author)
         
-        # Apply sorting based on the 'sort' parameter.
         if sort == 'most_issued':
             qs = qs.order_by('-issued_count')
         elif sort == 'least_issued':
@@ -49,7 +43,7 @@ class CartViewSet(viewsets.ViewSet):
         serializer = CartItemSerializer(items, many=True)
         return Response(serializer.data)
 
-    def create(self, request): # Add to Cart endpoint [cite: 20]
+    def create(self, request):
         serializer = CartItemSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         book = serializer.validated_data['book']
@@ -71,7 +65,7 @@ class CartViewSet(viewsets.ViewSet):
 class CheckoutView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request): # Checkout endpoint [cite: 21]
+    def post(self, request): 
         items = CartItem.objects.filter(user=request.user)
         if not items.exists():
             return Response({'detail': 'Cart empty'}, status=status.HTTP_400_BAD_REQUEST)
@@ -97,7 +91,6 @@ class CheckoutView(APIView):
             items.delete()
 
         serializer = IssueSerializer(issued_list, many=True)
-        # Provide a simple bill summary as required [cite: 23]
         bill = {
             'issued_count': len(issued_list),
             'total_amount': total,
@@ -105,7 +98,6 @@ class CheckoutView(APIView):
         }
         return Response(bill, status=status.HTTP_201_CREATED)
 
-# New View to handle returning books
 class ReturnBookView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -136,7 +128,7 @@ class IssuedBookListView(generics.ListAPIView):
 class SaveForLaterView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request): # Save for later endpoint [cite: 24]
+    def post(self, request): 
         book_id = request.data.get('book_id')
         try:
             book = Book.objects.get(id=book_id)
@@ -150,7 +142,6 @@ class SaveForLaterView(APIView):
         else:
             return Response({'detail': 'Book was already in your saved list.'}, status=status.HTTP_200_OK)
 
-# New View to list saved books
 class SavedBookListView(generics.ListAPIView):
     serializer_class = SavedBookSerializer
     permission_classes = [IsAuthenticated]

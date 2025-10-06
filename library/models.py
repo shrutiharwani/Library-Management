@@ -1,5 +1,3 @@
-# library/models.py
-
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
@@ -20,7 +18,6 @@ class Book(models.Model):
         return f"{self.title} by {self.author}"
 
     def save(self, *args, **kwargs):
-        # On creation, ensure available_copies matches total_copies
         if self.pk is None:
             self.available_copies = self.total_copies
         super().save(*args, **kwargs)
@@ -45,7 +42,6 @@ class IssuedBook(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.return_date:
-            # Sets return date 14 days from issue date as per requirement
             self.return_date = timezone.now().date() + timedelta(days=14)
         super().save(*args, **kwargs)
 

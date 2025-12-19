@@ -20,6 +20,58 @@ Simple library management backend built with Django REST Framework.
 
 ---
 
+#Project Structure
+
+library-management/
+│
+├── manage.py
+├── requirements.txt
+├── README.md
+│
+├── library_management/
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+│
+├── users/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── permissions.py
+│   └── migrations/
+│       └── __init__.py
+│
+├── books/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── views.py
+│   ├── urls.py
+│   └── migrations/
+│       └── __init__.py
+│
+├── transactions/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── views.py
+│   ├── urls.py
+│   └── migrations/
+│       └── __init__.py
+│
+└── venv/
+
+
 ## How to Run
 
 # 1. Clone the repository

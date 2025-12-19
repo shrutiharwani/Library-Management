@@ -20,8 +20,9 @@ Simple library management backend built with Django REST Framework.
 
 ---
 
-#Project Structure
+## Project Structure
 
+```
 library-management/
 │
 ├── manage.py
@@ -70,6 +71,8 @@ library-management/
 │       └── __init__.py
 │
 └── venv/
+```
+
 
 
 ## How to Run
